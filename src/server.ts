@@ -3,6 +3,7 @@ import express from 'express';
 import http from 'http';
 import mongoose from 'mongoose';
 import Logging from './library/Logging';
+import rotationItemRoutes from './routes/RotationItem';
 
 const router = express();
 
@@ -23,7 +24,7 @@ const startServer = () => {
         );
 
         res.on('finish', () => {
-              Logging.info(
+            Logging.info(
                 `Result - METHOD: [${req.method}] - URL: [${req.url}] - IP: [${req.socket.remoteAddress}] - STATUS: [${res.statusCode}]`
             );
         });
@@ -51,6 +52,8 @@ const startServer = () => {
 
         next();
     });
+
+    router.use('/rotationItems', rotationItemRoutes);
 
     router.get('/ping', (req, res, next) =>
         res.status(200).json({ message: 'pong' })
