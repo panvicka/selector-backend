@@ -1,0 +1,13 @@
+version: "3.4"
+
+services:
+  api:
+    build:
+      context: .
+      target: development #stop after development stage
+    volumes:
+      - ./:/usr/src/app 
+      - /usr/src/app/node_modules #leave this folder alone, do not sync
+    ports:
+      - 9090:9090
+    command: npm run dev
