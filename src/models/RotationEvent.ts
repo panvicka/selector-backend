@@ -20,9 +20,10 @@ const RotationEventSchema: Schema = new Schema(
             required: true,
         },
         endDate: {
-            type:  { type: Date || null},
+            type: { type: Date || null },
             required: false,
         },
+        people: [{ type: Schema.Types.ObjectId, ref: 'person' }],
     },
     {
         timestamps: true,
