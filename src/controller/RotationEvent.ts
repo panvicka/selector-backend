@@ -7,11 +7,13 @@ const createRotationEvent = (
     res: Response,
     next: NextFunction
 ) => {
-    const { name, item } = req.body;
+    const { item, startDate, endDate, memberTitles } = req.body;
     const rotationEvent = new RotationEvent({
         _id: new mongoose.Types.ObjectId(),
-        name,
         item,
+        startDate,
+        endDate,
+        memberTitles,
     });
 
     return rotationEvent

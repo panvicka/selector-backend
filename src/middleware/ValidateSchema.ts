@@ -25,14 +25,4 @@ export const Schemas = {
             name: Joi.string().required(),
         }),
     },
-    rotationEvent: {
-        create: Joi.object<IRotationEvent>({
-            item: Joi.string().regex(/^[0-9a-fA-f]{24}$/),
-            name: Joi.string().required(),
-        }),
-        update: Joi.object<IRotationEvent>({
-            item: Joi.string().regex(/^[0-9a-fA-f]{24}$/),
-            name: Joi.string().required(),
-        }),
-    },
 };
