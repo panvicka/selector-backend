@@ -7,10 +7,11 @@ const createRotationItem = (
     res: Response,
     next: NextFunction
 ) => {
-    const { name } = req.body;
+    const { name, memberTitles } = req.body;
     const rotationItem = new RotationItem({
         _id: new mongoose.Types.ObjectId(),
         name,
+        memberTitles,
     });
 
     return rotationItem
