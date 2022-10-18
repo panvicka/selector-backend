@@ -9,6 +9,7 @@ export interface IPersonModel extends IPerson, Document {}
 const PersonSchema: Schema = new Schema(
     {
         name: { type: String, required: true },
+        itemsCanBeAttended: [{ type: Schema.Types.ObjectId, ref: 'item' }],
     },
     {
         versionKey: false,

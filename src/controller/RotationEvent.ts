@@ -41,6 +41,16 @@ const readAllRotationEvents = (
     res: Response,
     next: NextFunction
 ) => {
+    console.log(req.query);
+
+    if (req.query.item) {
+        return RotationEvent.find({ item: { _id: req.query.item } })
+            .populate('item')
+            .populate('people')
+            .then((rotationEvents) => res.status(200).json({ rotationEvents }))
+            .catch((error) => res.status(500).json({ error }));
+    }
+
     return RotationEvent.find()
         .populate('item')
         .populate('people')

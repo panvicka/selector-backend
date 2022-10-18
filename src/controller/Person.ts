@@ -3,10 +3,11 @@ import { NextFunction, Request, Response } from 'express';
 import Person from '../models/Person';
 
 const createPerson = (req: Request, res: Response, next: NextFunction) => {
-    const { name } = req.body;
+    const { name, itemsCanBeAttended } = req.body;
     const person = new Person({
         _id: new mongoose.Types.ObjectId(),
         name,
+        itemsCanBeAttended,
     });
 
     return person
