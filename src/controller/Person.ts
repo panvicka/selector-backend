@@ -29,6 +29,14 @@ const readPerson = (req: Request, res: Response, next: NextFunction) => {
 };
 
 const readAllPersons = (req: Request, res: Response, next: NextFunction) => {
+    if (req.query.item) {
+        return Person.find({
+            itemsCanBeAttended: { $elemMatch: { $eq: req.query.item } },
+        })
+            .then((persons) => res.status(200).json({ persons }))
+            .catch((error) => res.status(500).json({ error }));
+    }
+
     return Person.find()
         .then((persons) => res.status(200).json({ persons }))
         .catch((error) => res.status(500).json({ error }));

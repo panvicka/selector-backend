@@ -10,6 +10,8 @@ router.post(
     controller.createRotationItem
 );
 router.get('/get/:rotationItemId', controller.readRotationItem);
+router.get('/get/:rotationItemId/peopleCount', controller.getRotationItemIdPeopleCount);
+
 router.get('/get/', controller.readAllRotationItems);
 router.patch(
     '/update/:rotationItemId',

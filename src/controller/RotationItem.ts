@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import RotationItem from '../models/RotationItem';
+import Person from '../models/Person';
+import RotationEvent from '../models/RotationEvent';
 
 const createRotationItem = (
     req: Request,
@@ -30,6 +32,50 @@ const readRotationItem = (req: Request, res: Response, next: NextFunction) => {
                 : res.status(404).json({ message: 'not found' })
         )
         .catch((error) => res.status(500).json({ error }));
+};
+
+const getRotationItemIdPeopleCount = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const rotationItemId = req.params.rotationItemId;
+    const role = req.query.position || "empty";
+    const rotationItem = await RotationItem.findById(rotationItemId);
+    let rolePosition = 0
+
+    if (rotationItem) {
+        rolePosition = rotationItem.memberTitles.indexOf(role.toString());
+    }
+
+    // get all people that can attend
+    let possiblePersons = await Person.find({
+        itemsCanBeAttended: { $elemMatch: { $eq: rotationItemId } },
+    });
+
+    let returnVal;
+
+    const possibleEvents = await RotationEvent.find({ item: rotationItemId });
+
+    returnVal = possiblePersons.map((person) => {
+        let attended = 0;
+        possibleEvents.forEach((event: any) => {
+            const idArray = event.people.toString().split(',');
+            const personID = person._id.toString();
+            if (idArray[rolePosition] == personID) {
+                attended = attended + 1;
+            }
+        });
+        console.log(attended);
+
+        return {
+            _id: person._id,
+            name: person.name,
+            attended: attended,
+        };
+    });
+
+    res.status(200).json({ returnVal });
 };
 
 const readAllRotationItems = (
@@ -89,4 +135,5 @@ export default {
     readAllRotationItems,
     updateRotationItem,
     deleteRotationItem,
+    getRotationItemIdPeopleCount,
 };
