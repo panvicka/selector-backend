@@ -57,19 +57,50 @@ const getCountOfAttendForPerson = (
     };
 };
 
+const getCountForPosition = (
+    allEvents: any,
+    allPersons: any,
+    rolePosition: any
+) => {
+    let personAttendedToRole = 0;
+    let arrayOfPeopleAttendance: any = [];
+
+    allPersons.forEach((person: any) => {
+        personAttendedToRole = 0;
+        let latestDate:any = null;
+        let dates: any = [];
+        allEvents.forEach((event: any) => {
+            const idArray = event.people.toString().split(',');
+            const personID = person._id.toString();
+            dates.push(event.startDate);
+
+            if (idArray[rolePosition] == personID) {
+                personAttendedToRole = personAttendedToRole + 1;
+                if (event.startDate > latestDate) {
+                    latestDate = event.startDate;
+                }
+            }
+        });
+
+        arrayOfPeopleAttendance.push({
+            name: person.name,
+            _id: person._id,
+            attended: personAttendedToRole,
+            latestDate,
+            dates,
+        });
+    });
+
+    return arrayOfPeopleAttendance;
+};
+
 const getRotationItemIdPeopleCount = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     const rotationItemId = req.params.rotationItemId;
-    const role = req.query.position || '';
 
-    if (typeof role !== 'string') {
-        return res.status(404).json({ message: 'wrong role type' });
-    }
-
-    let rolePosition = 0;
     const rotationItem = await RotationItem.findById(rotationItemId);
 
     if (!rotationItem) {
@@ -81,30 +112,17 @@ const getRotationItemIdPeopleCount = async (
     });
     const possibleEvents = await RotationEvent.find({ item: rotationItemId });
 
-    let attendance: any = [];
+    let attendanceByRole: any = {};
 
-    if (role) {
-        rolePosition = rotationItem.memberTitles.indexOf(role.toString());
-        if (rolePosition === -1) {
-            return res.status(404).json({ message: 'role not found' });
-        }
+    rotationItem.memberTitles.forEach((title, index) => {
+        attendanceByRole[title] = getCountForPosition(
+            possibleEvents,
+            possiblePersons,
+            index
+        );
+    });
 
-        possiblePersons.map((person) => {
-            attendance.push(
-                getCountOfAttendForPerson(possibleEvents, person, rolePosition)
-            );
-        });
-    } else {
-        possiblePersons.forEach((person) => {
-            rotationItem.memberTitles.forEach((title, index) => {
-                attendance.push(
-                    getCountOfAttendForPerson(possibleEvents, person, index)
-                );
-            });
-        });
-    }
-
-    res.status(200).json({ attendance });
+    res.status(200).json({ attendanceByRole });
 };
 
 const readAllRotationItems = (
