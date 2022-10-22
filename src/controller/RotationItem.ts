@@ -34,48 +34,77 @@ const readRotationItem = (req: Request, res: Response, next: NextFunction) => {
         .catch((error) => res.status(500).json({ error }));
 };
 
+const getCountOfAttendForPerson = (
+    allEvents: any,
+    person: any,
+    rolePosition: any
+) => {
+    let attended = 0;
+    allEvents.forEach((event: any) => {
+        const idArray = event.people.toString().split(',');
+        const personID = person._id.toString();
+        if (idArray[rolePosition] == personID) {
+            attended = attended + 1;
+        }
+    });
+
+    return {
+        [rolePosition]: {
+            _id: person._id,
+            name: person.name,
+            attended: attended,
+        },
+    };
+};
+
 const getRotationItemIdPeopleCount = async (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
     const rotationItemId = req.params.rotationItemId;
-    const role = req.query.position || "empty";
-    const rotationItem = await RotationItem.findById(rotationItemId);
-    let rolePosition = 0
+    const role = req.query.position || '';
 
-    if (rotationItem) {
-        rolePosition = rotationItem.memberTitles.indexOf(role.toString());
+    if (typeof role !== 'string') {
+        return res.status(404).json({ message: 'wrong role type' });
     }
 
-    // get all people that can attend
+    let rolePosition = 0;
+    const rotationItem = await RotationItem.findById(rotationItemId);
+
+    if (!rotationItem) {
+        return res.status(404).json({ message: 'item not found' });
+    }
+
     let possiblePersons = await Person.find({
         itemsCanBeAttended: { $elemMatch: { $eq: rotationItemId } },
     });
-
-    let returnVal;
-
     const possibleEvents = await RotationEvent.find({ item: rotationItemId });
 
-    returnVal = possiblePersons.map((person) => {
-        let attended = 0;
-        possibleEvents.forEach((event: any) => {
-            const idArray = event.people.toString().split(',');
-            const personID = person._id.toString();
-            if (idArray[rolePosition] == personID) {
-                attended = attended + 1;
-            }
+    let attendance: any = [];
+
+    if (role) {
+        rolePosition = rotationItem.memberTitles.indexOf(role.toString());
+        if (rolePosition === -1) {
+            return res.status(404).json({ message: 'role not found' });
+        }
+
+        possiblePersons.map((person) => {
+            attendance.push(
+                getCountOfAttendForPerson(possibleEvents, person, rolePosition)
+            );
         });
-        console.log(attended);
+    } else {
+        possiblePersons.forEach((person) => {
+            rotationItem.memberTitles.forEach((title, index) => {
+                attendance.push(
+                    getCountOfAttendForPerson(possibleEvents, person, index)
+                );
+            });
+        });
+    }
 
-        return {
-            _id: person._id,
-            name: person.name,
-            attended: attended,
-        };
-    });
-
-    res.status(200).json({ returnVal });
+    res.status(200).json({ attendance });
 };
 
 const readAllRotationItems = (
