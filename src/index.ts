@@ -6,6 +6,8 @@ import Logging from "./library/Logging";
 import rotationItemRoutes from "./routes/RotationItem";
 import rotationEventRoutes from "./routes/RotationEvent";
 import personRoutes from "./routes/Person";
+import roleRoutes from "./routes/Role";
+
 
 const router = express();
 
@@ -62,6 +64,8 @@ const startServer = () => {
   router.use("/rotationItems", rotationItemRoutes);
   router.use("/rotationEvents", rotationEventRoutes);
   router.use("/person", personRoutes);
+  router.use("/roles", roleRoutes);
+
 
   router.get("/ping", (req, res, next) => res.status(200).json({ message: "pong" }));
 
