@@ -9,11 +9,10 @@ const createRotationItem = (
     res: Response,
     next: NextFunction
 ) => {
-    const { name, memberTitles, roles } = req.body;
+    const { name, roles } = req.body;
     const rotationItem = new RotationItem({
         _id: new mongoose.Types.ObjectId(),
         name,
-        memberTitles,
         roles,
     });
 
@@ -36,34 +35,7 @@ const readRotationItem = (req: Request, res: Response, next: NextFunction) => {
         .catch((error) => res.status(500).json({ error }));
 };
 
-const getCountOfAttendForPerson = (
-    allEvents: any,
-    person: any,
-    rolePosition: any
-) => {
-    let attended = 0;
-    allEvents.forEach((event: any) => {
-        const idArray = event.people.toString().split(',');
-        const personID = person._id.toString();
-        if (idArray[rolePosition] == personID) {
-            attended = attended + 1;
-        }
-    });
-
-    return {
-        [rolePosition]: {
-            _id: person._id,
-            name: person.name,
-            attended: attended,
-        },
-    };
-};
-
-const getCountForPosition = (
-    allEvents: any,
-    allPersons: any,
-    rolePosition: any
-) => {
+const getCountForPosition = (allEvents: any, allPersons: any, roleId: any) => {
     let personAttendedToRole = 0;
     let arrayOfPeopleAttendance: any = [];
 
@@ -72,18 +44,19 @@ const getCountForPosition = (
         let latestDate: any = null;
         let dates: any = [];
         allEvents.forEach((event: any) => {
-            const idArray = event.people.toString().split(',');
-            const personID = person._id.toString();
-            dates.push(event.startDate);
-
-            if (idArray[rolePosition] == personID) {
-                personAttendedToRole = personAttendedToRole + 1;
-                if (event.startDate > latestDate) {
-                    latestDate = event.startDate;
+            event.participants.forEach((participant: any) => {
+                if (
+                    participant.role._id.toString() == roleId.toString() &&
+                    participant.person._id.toString() == person._id.toString()
+                ) {
+                    personAttendedToRole = personAttendedToRole + 1;
+                    dates.push(event.startDate);
+                    if (event.startDate > latestDate) {
+                        latestDate = event.startDate;
+                    }
                 }
-            }
+            });
         });
-
         arrayOfPeopleAttendance.push({
             name: person.name,
             _id: person._id,
@@ -103,7 +76,9 @@ const getRotationItemIdPeopleCount = async (
 ) => {
     const rotationItemId = req.params.rotationItemId;
 
-    const rotationItem = await RotationItem.findById(rotationItemId);
+    const rotationItem = await RotationItem.findById(rotationItemId).populate(
+        'roles'
+    );
 
     if (!rotationItem) {
         return res.status(404).json({ message: 'item not found' });
@@ -116,11 +91,11 @@ const getRotationItemIdPeopleCount = async (
 
     let attendanceByRole: any = {};
 
-    rotationItem.memberTitles.forEach((title, index) => {
-        attendanceByRole[title] = getCountForPosition(
+    rotationItem.roles.forEach((role: any) => {
+        attendanceByRole[role.name] = getCountForPosition(
             possibleEvents,
             possiblePersons,
-            index
+            role._id
         );
     });
 

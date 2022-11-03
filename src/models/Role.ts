@@ -2,6 +2,9 @@ import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IRole {
     name: string;
+    description: string;
+    icon: string;
+    itemsUsingRole: [];
 }
 
 export interface IRoleModel extends IRole, Document {}
