@@ -14,6 +14,7 @@ const RotationItemSchema: Schema = new Schema(
             type: [{ type: String }],
             required: false,
         },
+        roles: [{ type: Schema.Types.ObjectId, ref: 'role', required: false }],
     },
     {
         versionKey: false,

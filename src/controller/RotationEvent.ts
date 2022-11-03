@@ -7,13 +7,14 @@ const createRotationEvent = (
     res: Response,
     next: NextFunction
 ) => {
-    const { item, startDate, endDate, people } = req.body;
+    const { item, startDate, endDate, people, participants } = req.body;
     const rotationEvent = new RotationEvent({
         _id: new mongoose.Types.ObjectId(),
         item,
         startDate,
         endDate,
         people,
+        participants,
     });
 
     return rotationEvent
@@ -28,6 +29,8 @@ const readRotationEvent = (req: Request, res: Response, next: NextFunction) => {
     return RotationEvent.findById(rotationEventId)
         .populate('item')
         .populate('people')
+        .populate('participants.role', 'name description icon')
+        .populate('participants.person', 'name')
         .then((rotationEventId) =>
             rotationEventId
                 ? res.status(200).json({ rotationEventId })
@@ -46,14 +49,16 @@ const readAllRotationEvents = (
     if (req.query.item) {
         return RotationEvent.find({ item: { _id: req.query.item } })
             .populate('item')
-            .populate('people')
+            .populate('participants.role', 'name description icon')
+            .populate('participants.person', 'name')
             .then((rotationEvents) => res.status(200).json({ rotationEvents }))
             .catch((error) => res.status(500).json({ error }));
     }
 
     return RotationEvent.find()
         .populate('item')
-        .populate('people')
+        .populate('participants.role', 'name description icon')
+        .populate('participants.person', 'name')
         .then((rotationEvents) => res.status(200).json({ rotationEvents }))
         .catch((error) => res.status(500).json({ error }));
 };

@@ -6,7 +6,26 @@ export interface IRotationEvent {
     endDate: Date | null;
 }
 
+type IParticipant = {
+    role: { type: Schema.Types.ObjectId; ref: 'role' };
+    person: { type: Schema.Types.ObjectId; ref: 'person' };
+};
+
 export interface IRotationEventModel extends IRotationEvent, Document {}
+
+const subSchemaParticipants = new Schema(
+    {
+        role: {
+            type: Schema.Types.ObjectId,
+            ref: 'role',
+        },
+        person: {
+            type: Schema.Types.ObjectId,
+            ref: 'person',
+        },
+    },
+    { _id: false }
+);
 
 const RotationEventSchema: Schema = new Schema(
     {
@@ -24,6 +43,7 @@ const RotationEventSchema: Schema = new Schema(
             required: false,
         },
         people: [{ type: Schema.Types.ObjectId, ref: 'person' }],
+        participants: [subSchemaParticipants],
     },
     {
         timestamps: true,

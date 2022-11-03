@@ -9,11 +9,12 @@ const createRotationItem = (
     res: Response,
     next: NextFunction
 ) => {
-    const { name, memberTitles } = req.body;
+    const { name, memberTitles, roles } = req.body;
     const rotationItem = new RotationItem({
         _id: new mongoose.Types.ObjectId(),
         name,
         memberTitles,
+        roles,
     });
 
     return rotationItem
@@ -26,6 +27,7 @@ const readRotationItem = (req: Request, res: Response, next: NextFunction) => {
     const rotationItemId = req.params.rotationItemId;
 
     return RotationItem.findById(rotationItemId)
+        .populate('roles')
         .then((rotationItemId) =>
             rotationItemId
                 ? res.status(200).json({ rotationItemId })
@@ -67,7 +69,7 @@ const getCountForPosition = (
 
     allPersons.forEach((person: any) => {
         personAttendedToRole = 0;
-        let latestDate:any = null;
+        let latestDate: any = null;
         let dates: any = [];
         allEvents.forEach((event: any) => {
             const idArray = event.people.toString().split(',');
@@ -131,6 +133,7 @@ const readAllRotationItems = (
     next: NextFunction
 ) => {
     return RotationItem.find()
+        .populate('roles')
         .then((rotationItems) => res.status(200).json({ rotationItems }))
         .catch((error) => res.status(500).json({ error }));
 };
