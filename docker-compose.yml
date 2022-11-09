@@ -5,6 +5,7 @@ services:
     build:
       context: .
       target: production
-
+    env_file:
+      - ./.env.prod
     ports:
       - 9090:9090
