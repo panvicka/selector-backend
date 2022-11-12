@@ -112,6 +112,7 @@ const readAllRotationItems = (
 ) => {
     return RotationItem.find()
         .populate('roles')
+        .populate('groupes')
         .then((rotationItems) => res.status(200).json({ rotationItems }))
         .catch((error) => res.status(500).json({ error }));
 };
