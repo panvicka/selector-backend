@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import { NextFunction, Request, Response } from 'express';
 import Group from '../models/Group';
+import RotationItem from '../models/RotationItem';
 
 const createGroup = (req: Request, res: Response, next: NextFunction) => {
     const { name, description } = req.body;
@@ -16,20 +17,36 @@ const createGroup = (req: Request, res: Response, next: NextFunction) => {
         .catch((error) => res.status(500).json({ error }));
 };
 
-const readGroup = (req: Request, res: Response, next: NextFunction) => {
+const readGroup = async (req: Request, res: Response, next: NextFunction) => {
     const groupId = req.params.groupId;
 
+    const allRotationItems = await RotationItem.find({ groupes: groupId });
+
     return Group.findById(groupId)
-        .then((groupId) =>
-            groupId
-                ? res.status(200).json({ groupId })
+        .then((group) =>
+            group
+                ? res.status(200).json({ group: { group, allRotationItems } })
                 : res.status(404).json({ message: 'not found' })
         )
         .catch((error) => res.status(500).json({ error }));
 };
 
-const readAllGroups = (req: Request, res: Response, next: NextFunction) => {
-    return Group.find()
+const readAllGroups = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    console.log(req.query);
+
+    const allGroupes = await Group.find();
+
+    // todo returning too much information
+    Promise.all(
+        allGroupes.map(async (group) => {
+            const items = await RotationItem.find({ groupes: group._id });
+            return { ...group.toObject(), items };
+        })
+    )
         .then((groups) => res.status(200).json({ groups }))
         .catch((error) => res.status(500).json({ error }));
 };

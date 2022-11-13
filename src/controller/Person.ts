@@ -3,11 +3,13 @@ import { NextFunction, Request, Response } from 'express';
 import Person from '../models/Person';
 
 const createPerson = (req: Request, res: Response, next: NextFunction) => {
-    const { name, itemsCanBeAttended } = req.body;
+    const { name, itemsCanBeAttended, groupes, active } = req.body;
     const person = new Person({
         _id: new mongoose.Types.ObjectId(),
         name,
         itemsCanBeAttended,
+        groupes,
+        active,
     });
 
     return person
@@ -33,11 +35,14 @@ const readAllPersons = (req: Request, res: Response, next: NextFunction) => {
         return Person.find({
             itemsCanBeAttended: { $elemMatch: { $eq: req.query.item } },
         })
+            .sort('name')
             .then((persons) => res.status(200).json({ persons }))
             .catch((error) => res.status(500).json({ error }));
     }
 
     return Person.find()
+        .populate('groupes')
+        .sort('name')
         .then((persons) => res.status(200).json({ persons }))
         .catch((error) => res.status(500).json({ error }));
 };

@@ -63,6 +63,7 @@ const getCountForPosition = (allEvents: any, allPersons: any, roleId: any) => {
         arrayOfPeopleAttendance.push({
             name: person.name,
             _id: person._id,
+            active: person.active,
             attended: personAttendedToRole,
             latestDate,
             dates,
