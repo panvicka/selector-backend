@@ -49,6 +49,7 @@ const readAllRotationEvents = (
     if (req.query.item) {
         return RotationEvent.find({ item: { _id: req.query.item } })
             .populate('item')
+            .sort('startDate')
             .populate('participants.role', 'name description icon')
             .populate('participants.person', 'name')
             .then((rotationEvents) => res.status(200).json({ rotationEvents }))
