@@ -13,16 +13,6 @@ const router = express();
 
 console.log('hi');
 
-// const app = express();
-
-// app.get("/", (req: Request, res: Response) => {
-//   return res.json({
-//     status: "success",
-//   });
-// });
-
-// app.listen(9090, () => console.log("listening on port 9090"));
-
 mongoose
     .connect(config.mongo.url, { retryWrites: true, w: 'majority' })
     .then(() => {
