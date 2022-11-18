@@ -9,16 +9,15 @@ const createRotationItem = (
     res: Response,
     next: NextFunction
 ) => {
-    const { name, roles, description, isLongerThenOneDay, groups } = req.body;
+    const { name, roles, description, isLongerThenOneDay, groupes } = req.body;
     const rotationItem = new RotationItem({
         _id: new mongoose.Types.ObjectId(),
         name,
         description,
         roles,
         isLongerThenOneDay,
-        groups,
+        groupes,
     });
-
     return rotationItem
         .save()
         .then((rotationItem) => res.status(201).json({ rotationItem }))
@@ -124,7 +123,6 @@ const updateRotationItem = (
     next: NextFunction
 ) => {
     const rotationItemId = req.params.rotationItemId;
-
     return RotationItem.findById(rotationItemId)
         .then((rotationItem) => {
             if (rotationItem) {
