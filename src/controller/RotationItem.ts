@@ -3,6 +3,28 @@ import mongoose from 'mongoose';
 import RotationItem from '../models/RotationItem';
 import Person from '../models/Person';
 import RotationEvent from '../models/RotationEvent';
+import { addItemToArrayIfNotAlreadyThere } from '../utils/arrayUtils';
+
+// const addItemToAllPeopleWithinGroup = async (itemId, groupId) => {
+//     let possiblePersons = await Person.find({
+//         groupes: { $elemMatch: { $eq: groupId } },
+//     });
+
+//     possiblePersons.forEach((person) => {
+//         let ajdustedItemsToAttend = [...person.itemsCanBeAttended];
+//         ajdustedItemsToAttend = addItemToArrayIfNotAlreadyThere(
+//             ajdustedItemsToAttend,
+//             groupId
+//         );
+//         let newPersonBody = {
+//             ...person,
+//             ajdustedItemsToAttend,
+//         };
+//         if (person) {
+//             person.set(newPersonBody);
+//         }
+//     });
+// };
 
 const createRotationItem = (
     req: Request,
