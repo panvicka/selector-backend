@@ -1,4 +1,4 @@
-export const findByKeyInArray = (key, keyValue, array) => {
+export const findByKeyInArray = (key:any, keyValue:any, array:any) => {
 	for (var i = 0; i < array.length; i++) {
 		if (array[i][key] === keyValue) {
 			return array[i];
@@ -8,7 +8,7 @@ export const findByKeyInArray = (key, keyValue, array) => {
 	return -1;
 };
 
-export const findIndexByKeyInArray = (key, keyValue, array) => {
+export const findIndexByKeyInArray = (key:any, keyValue:any, array:any) => {
 	for (var i = 0; i < array.length; i++) {
 		if (array[i][key] === keyValue) {
 			return i;
@@ -18,7 +18,7 @@ export const findIndexByKeyInArray = (key, keyValue, array) => {
 	return -1;
 };
 
-export const addToArrayIfKeyValueDoesntExist = (array, key, object) => {
+export const addToArrayIfKeyValueDoesntExist = (array:any, key:any, object:any) => {
 	if (findByKeyInArray(key, object[key], array) == -1) {
 		array.push(object);
 		return array;
@@ -27,7 +27,7 @@ export const addToArrayIfKeyValueDoesntExist = (array, key, object) => {
 	}
 };
 
-export const removeFromArrayBasedOnKey = (key, keyValue, array) => {
+export const removeFromArrayBasedOnKey = (key:any, keyValue:any, array:any) => {
 	for (var i = 0; i < array.length; i++)
 		if (array[i][key] === keyValue) {
 			array.splice(i, 1);
@@ -37,7 +37,7 @@ export const removeFromArrayBasedOnKey = (key, keyValue, array) => {
 	return array;
 };
 
-export const replaceKeyValueInToArrayIfKeyExistOrAdd = (array, keyToExist, object) => {
+export const replaceKeyValueInToArrayIfKeyExistOrAdd = (array:any, keyToExist:any, object:any) => {
 	let index = findIndexByKeyInArray(keyToExist, object[keyToExist], array);
 	if (index == -1) {
 		array.push(object);
@@ -49,7 +49,7 @@ export const replaceKeyValueInToArrayIfKeyExistOrAdd = (array, keyToExist, objec
 	}
 };
 
-export const removeItemFromArray = (arr, value) => {
+export const removeItemFromArray = (arr:any, value:any) => {
 	const index = arr.indexOf(value);
 	if (index > -1) {
 		arr.splice(index, 1);
@@ -57,7 +57,7 @@ export const removeItemFromArray = (arr, value) => {
 	return arr;
 };
 
-export const addItemToArrayIfNotAlreadyThere = (arr, value) => {
+export const addItemToArrayIfNotAlreadyThere = (arr:any, value:any) => {
 	if (arr.indexOf(value) === -1) {
 		arr.push(value);
 	}

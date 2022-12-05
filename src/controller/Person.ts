@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import { NextFunction, Request, Response } from 'express';
 import Person from '../models/Person';
+import RotationEvent from '../models/RotationEvent';
+import { addToArrayIfKeyValueDoesntExist } from '../utils/arrayUtils';
 
 const createPerson = (req: Request, res: Response, next: NextFunction) => {
     const { name, itemsCanBeAttended, groupes, active } = req.body;
@@ -28,6 +30,37 @@ const readPerson = (req: Request, res: Response, next: NextFunction) => {
                 : res.status(404).json({ message: 'not found' })
         )
         .catch((error) => res.status(500).json({ error }));
+};
+
+const readPersonSummary = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const personId = req.params.personId;
+
+    let attendedEvents: any = [];
+
+    const allEvents: any = await RotationEvent.find()
+        .populate('item')
+        .populate('participants.role', 'name description icon')
+        .populate('participants.person', 'name');
+
+    // this should be doable with just filter, but not working :(
+    allEvents.forEach((event: any) => {
+        event.participants.forEach((participant: any) => {
+            console.log(participant.person);
+            if (participant?.person?._id?.toString() == personId) {
+                attendedEvents = addToArrayIfKeyValueDoesntExist(
+                    attendedEvents,
+                    '_id',
+                    event
+                );
+             }
+        });
+    });
+
+    res.status(200).json({ attendedEvents });
 };
 
 const readAllPersons = (req: Request, res: Response, next: NextFunction) => {
@@ -81,6 +114,7 @@ const deletePerson = (req: Request, res: Response, next: NextFunction) => {
 export default {
     createPerson,
     readPerson,
+    readPersonSummary,
     readAllPersons,
     updatePerson,
     deletePerson,
