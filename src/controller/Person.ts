@@ -23,6 +23,10 @@ const createPerson = (req: Request, res: Response, next: NextFunction) => {
 const readPerson = (req: Request, res: Response, next: NextFunction) => {
     const personId = req.params.personId;
 
+    if (!mongoose.Types.ObjectId.isValid(personId)) {
+        return res.status(400).send('Invalid person object id');
+    }
+
     return Person.findById(personId)
         .then((personId) =>
             personId
@@ -38,6 +42,10 @@ const readPersonSummary = async (
     next: NextFunction
 ) => {
     const personId = req.params.personId;
+
+    if (!mongoose.Types.ObjectId.isValid(personId)) {
+        return res.status(400).send('Invalid person object id');
+    }
 
     let attendedEvents: any = [];
 
@@ -56,7 +64,7 @@ const readPersonSummary = async (
                     '_id',
                     event
                 );
-             }
+            }
         });
     });
 
@@ -65,6 +73,10 @@ const readPersonSummary = async (
 
 const readAllPersons = (req: Request, res: Response, next: NextFunction) => {
     if (req.query.item) {
+        if (!mongoose.Types.ObjectId.isValid(req.query.item as any)) {
+            return res.status(400).send('Invalid item object id');
+        }
+
         return Person.find({
             itemsCanBeAttended: { $elemMatch: { $eq: req.query.item } },
         })
@@ -82,6 +94,10 @@ const readAllPersons = (req: Request, res: Response, next: NextFunction) => {
 
 const updatePerson = (req: Request, res: Response, next: NextFunction) => {
     const personId = req.params.personId;
+
+    if (!mongoose.Types.ObjectId.isValid(personId)) {
+        return res.status(400).send('Invalid person object id');
+    }
 
     return Person.findById(personId)
         .then((person) => {
@@ -101,6 +117,10 @@ const updatePerson = (req: Request, res: Response, next: NextFunction) => {
 
 const deletePerson = (req: Request, res: Response, next: NextFunction) => {
     const personId = req.params.personId;
+
+    if (!mongoose.Types.ObjectId.isValid(personId)) {
+        return res.status(400).send('Invalid person object id');
+    }
 
     return Person.findByIdAndDelete(personId)
         .then((personId) =>

@@ -71,6 +71,10 @@ const updateRotationEvent = (
 ) => {
     const rotationEventId = req.params.rotationEventId;
 
+    if (!mongoose.Types.ObjectId.isValid(rotationEventId)) {
+        return res.status(400).send('Invalid event object id');
+    }
+
     return RotationEvent.findById(rotationEventId)
         .then((rotationEvent) => {
             if (rotationEvent) {
@@ -95,6 +99,10 @@ const deleteRotationEvent = (
     next: NextFunction
 ) => {
     const rotationEventId = req.params.rotationEventId;
+
+    if (!mongoose.Types.ObjectId.isValid(rotationEventId)) {
+        return res.status(400).send('Invalid event object id');
+    }
 
     return RotationEvent.findByIdAndDelete(rotationEventId)
         .then((rotationEventId) =>
