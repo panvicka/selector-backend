@@ -20,6 +20,10 @@ const createGroup = (req: Request, res: Response, next: NextFunction) => {
 const readGroup = async (req: Request, res: Response, next: NextFunction) => {
     const groupId = req.params.groupId;
 
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+        return res.status(400).send('Invalid group object id');
+    }
+
     const allRotationItems = await RotationItem.find({ groupes: groupId });
 
     return Group.findById(groupId)
@@ -54,6 +58,10 @@ const readAllGroups = async (
 const updateGroup = (req: Request, res: Response, next: NextFunction) => {
     const groupId = req.params.groupId;
 
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+        return res.status(400).send('Invalid group object id');
+    }
+
     return Group.findById(groupId)
         .then((group) => {
             if (group) {
@@ -72,6 +80,10 @@ const updateGroup = (req: Request, res: Response, next: NextFunction) => {
 
 const deleteGroup = (req: Request, res: Response, next: NextFunction) => {
     const groupId = req.params.groupId;
+
+    if (!mongoose.Types.ObjectId.isValid(groupId)) {
+        return res.status(400).send('Invalid group object id');
+    }
 
     return Group.findByIdAndDelete(groupId)
         .then((groupId) =>

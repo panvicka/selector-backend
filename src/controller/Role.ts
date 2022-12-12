@@ -22,6 +22,10 @@ const createRole = (req: Request, res: Response, next: NextFunction) => {
 const readRole = (req: Request, res: Response, next: NextFunction) => {
     const roleId = req.params.roleId;
 
+    if (!mongoose.Types.ObjectId.isValid(roleId)) {
+        return res.status(400).send('Invalid role object id');
+    }
+
     return Role.findById(roleId)
         .populate('item')
         .then((roleId) =>
@@ -49,6 +53,10 @@ const readAllRoles = (req: Request, res: Response, next: NextFunction) => {
 const updateRole = (req: Request, res: Response, next: NextFunction) => {
     const roleId = req.params.roleId;
 
+    if (!mongoose.Types.ObjectId.isValid(roleId)) {
+        return res.status(400).send('Invalid role object id');
+    }
+
     return Role.findById(roleId)
         .then((role) => {
             if (role) {
@@ -67,6 +75,10 @@ const updateRole = (req: Request, res: Response, next: NextFunction) => {
 
 const deleteRole = (req: Request, res: Response, next: NextFunction) => {
     const roleId = req.params.roleId;
+
+    if (!mongoose.Types.ObjectId.isValid(roleId)) {
+        return res.status(400).send('Invalid role object id');
+    }
 
     return Role.findByIdAndDelete(roleId)
         .then((roleId) =>

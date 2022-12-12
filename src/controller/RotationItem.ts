@@ -4,6 +4,7 @@ import RotationItem from '../models/RotationItem';
 import Person from '../models/Person';
 import RotationEvent from '../models/RotationEvent';
 import { addItemToArrayIfNotAlreadyThere } from '../utils/arrayUtils';
+let ObjectID = require('mongodb').ObjectID;
 
 // const addItemToAllPeopleWithinGroup = async (itemId, groupId) => {
 //     let possiblePersons = await Person.find({
@@ -48,6 +49,10 @@ const createRotationItem = (
 
 const readRotationItem = (req: Request, res: Response, next: NextFunction) => {
     const rotationItemId = req.params.rotationItemId;
+
+    if (!mongoose.Types.ObjectId.isValid(rotationItemId)) {
+        return res.status(400).send('Invalid item object id');
+    }
 
     return RotationItem.findById(rotationItemId)
         .populate('roles')
@@ -101,6 +106,10 @@ const getRotationItemIdPeopleCount = async (
 ) => {
     const rotationItemId = req.params.rotationItemId;
 
+    if (!mongoose.Types.ObjectId.isValid(rotationItemId)) {
+        return res.status(400).send('Invalid item object id');
+    }
+
     const rotationItem = await RotationItem.findById(rotationItemId).populate(
         'roles'
     );
@@ -145,6 +154,11 @@ const updateRotationItem = (
     next: NextFunction
 ) => {
     const rotationItemId = req.params.rotationItemId;
+
+    if (!mongoose.Types.ObjectId.isValid(rotationItemId)) {
+        return res.status(400).send('Invalid item object id');
+    }
+
     return RotationItem.findById(rotationItemId)
         .then((rotationItem) => {
             if (rotationItem) {
@@ -169,6 +183,10 @@ const deleteRotationItem = (
     next: NextFunction
 ) => {
     const rotationItemId = req.params.rotationItemId;
+
+    if (!mongoose.Types.ObjectId.isValid(rotationItemId)) {
+        return res.status(400).send('Invalid item object id');
+    }
 
     return RotationItem.findByIdAndDelete(rotationItemId)
         .then((rotationItemId) =>
