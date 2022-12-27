@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import mongoose from 'mongoose';
-import RotationItem from '../models/RotationItem';
+
 import Person from '../models/Person';
 import RotationEvent from '../models/RotationEvent';
+import RotationItem from '../models/RotationItem';
 import { addItemToArrayIfNotAlreadyThere } from '../utils/arrayUtils';
+import mongoose from 'mongoose';
+
 let ObjectID = require('mongodb').ObjectID;
 
 // const addItemToAllPeopleWithinGroup = async (itemId, groupId) => {
@@ -56,6 +58,7 @@ const readRotationItem = (req: Request, res: Response, next: NextFunction) => {
 
     return RotationItem.findById(rotationItemId)
         .populate('roles')
+        .populate('groupes')
         .then((rotationItemId) =>
             rotationItemId
                 ? res.status(200).json({ rotationItemId })
