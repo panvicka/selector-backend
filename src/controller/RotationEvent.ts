@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
 import { NextFunction, Request, Response } from 'express';
+
 import RotationEvent from '../models/RotationEvent';
+import mongoose from 'mongoose';
 
 const createRotationEvent = (
     req: Request,
@@ -71,9 +72,7 @@ const updateRotationEvent = (
 ) => {
     const rotationEventId = req.params.rotationEventId;
 
-    if (!mongoose.Types.ObjectId.isValid(rotationEventId)) {
-        return res.status(400).send('Invalid event object id');
-    }
+
 
     return RotationEvent.findById(rotationEventId)
         .then((rotationEvent) => {

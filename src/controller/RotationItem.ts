@@ -139,11 +139,75 @@ const getRotationItemIdPeopleCount = async (
     res.status(200).json({ attendanceByRole });
 };
 
+const getRotationItemIdEvents = (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const rotationItemId = req.params.rotationItemId;
+
+    console.log(req.query.timeWindow);
+    console.log(req.query.limit);
+
+    if (rotationItemId) {
+        return RotationEvent.find({
+            item: { _id: rotationItemId },
+        })
+            .populate('item')
+            .sort('startDate')
+            .populate('participants.role', 'name description icon')
+            .populate('participants.person', 'name')
+            .then((rotationEvents) => res.status(200).json({ rotationEvents }))
+            .catch((error) => res.status(500).json({ error }));
+    }
+};
+
+const getRotationItemIdRecentEvents = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const rotationItemId = req.params.rotationItemId;
+    console.log('getRotationItemIdRecentEvents');
+    console.log(req.query.timeRange);
+    console.log(req.query.limit);
+    let limit = req.query.limit?.toString();
+    // let events;
+
+    if (!mongoose.Types.ObjectId.isValid(rotationItemId)) {
+        return res.status(400).send('Invalid item object id');
+    }
+
+    let events = await RotationEvent.find({
+        item: { _id: rotationItemId },
+    })
+        .populate('item')
+        .sort('startDate')
+        .populate('participants.role', 'name description icon')
+        .populate('participants.person', 'name');
+
+    if (limit) {
+        if (events?.length > 0 && events?.length > parseInt(limit)) {
+            events = events?.slice(-parseInt(limit));
+        }
+    }
+    console.log(events);
+    res.status(200).json({ events });
+};
+
 const readAllRotationItems = (
     req: Request,
     res: Response,
     next: NextFunction
 ) => {
+    console.log(req.query.group);
+    if (req.query.group) {
+        console.log('hledam');
+        return RotationItem.find({ groupes: req.query.group })
+            .then((rotationItems) => res.status(200).json({ rotationItems }))
+            .catch((error) => res.status(500).json({ error }));
+    }
+
     return RotationItem.find()
         .populate('roles')
         .populate('groupes')
@@ -207,4 +271,6 @@ export default {
     updateRotationItem,
     deleteRotationItem,
     getRotationItemIdPeopleCount,
+    getRotationItemIdRecentEvents,
+    getRotationItemIdEvents,
 };

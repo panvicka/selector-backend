@@ -1,7 +1,8 @@
-import mongoose from 'mongoose';
 import { NextFunction, Request, Response } from 'express';
+
 import Group from '../models/Group';
 import RotationItem from '../models/RotationItem';
+import mongoose from 'mongoose';
 
 const createGroup = (req: Request, res: Response, next: NextFunction) => {
     const { name, description } = req.body;
@@ -24,7 +25,9 @@ const readGroup = async (req: Request, res: Response, next: NextFunction) => {
         return res.status(400).send('Invalid group object id');
     }
 
-    const allRotationItems = await RotationItem.find({ groupes: groupId });
+    const allRotationItems = await RotationItem.find({ groupes: groupId })
+        .populate('roles')
+        .populate('groupes');
 
     return Group.findById(groupId)
         .then((group) =>
