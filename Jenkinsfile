@@ -23,7 +23,7 @@ pipeline {
         // https://bitbucket.org/bitgrip/bitgrip-pipeline-global/src/master/#markdown-header-bitgripgetgroupid
         DOCKER_GROUP = bitgripGetGroupId(this, [groupname: 'docker'])
         SELECTOR_BACKEND_IMAGE = 'bitgrip/selector-backend'
-        SELECTOR_BACKEND_VERSION = bitgripGetVersion(this)
+        SELECTOR_BACKEND_VERSION = '1.0.0'
         ANSIBLE_FORCE_COLOR = true
         DOCKER_IMAGE_BUILD_NAME = 'docker:20.10.17-cli-alpine3.16'
     }
