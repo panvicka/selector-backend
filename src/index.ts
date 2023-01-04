@@ -1,13 +1,14 @@
-import { config } from './config/config';
 import express, { Request, Response } from 'express';
+
+import Logging from './library/Logging';
+import { config } from './config/config';
 import http from 'http';
 import mongoose from 'mongoose';
-import Logging from './library/Logging';
-import rotationItemRoutes from './routes/RotationItem';
-import rotationEventRoutes from './routes/RotationEvent';
 import personRoutes from './routes/Person';
-import roleRoutes from './routes/Role';
 import roleGroups from './routes/Group';
+import roleRoutes from './routes/Role';
+import rotationEventRoutes from './routes/RotationEvent';
+import rotationItemRoutes from './routes/RotationItem';
 
 const router = express();
 
