@@ -4,12 +4,19 @@ import Role from '../models/Role';
 
 const createRole = (req: Request, res: Response, next: NextFunction) => {
     console.log(req.body);
-    const { name, description, icon, itemsUsingRole } = req.body;
+    const {
+        name,
+        description,
+        icon,
+        canHaveMultipleParticipants,
+        itemsUsingRole,
+    } = req.body;
     const role = new Role({
         _id: new mongoose.Types.ObjectId(),
         name,
         description,
         icon,
+        canHaveMultipleParticipants,
         itemsUsingRole,
     });
 

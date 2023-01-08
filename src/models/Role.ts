@@ -1,3 +1,4 @@
+import { boolean } from 'joi';
 import mongoose, { Document, Schema } from 'mongoose';
 
 export interface IRole {
@@ -5,6 +6,7 @@ export interface IRole {
     description: string;
     icon: string;
     itemsUsingRole: [];
+    canHaveMultipleParticipants: boolean;
 }
 
 export interface IRoleModel extends IRole, Document {}
@@ -17,6 +19,7 @@ const RoleSchema: Schema = new Schema(
         itemsUsingRole: [
             { type: Schema.Types.ObjectId, ref: 'item', required: false },
         ],
+        canHaveMultipleParticipants: { type: Boolean, required: false },
     },
     {
         versionKey: false,
