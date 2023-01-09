@@ -8,13 +8,15 @@ const createRotationEvent = (
     res: Response,
     next: NextFunction
 ) => {
-    const { item, startDate, endDate, people, participants } = req.body;
+    const { item, startDate, endDate, people, eventNote, participants } =
+        req.body;
     const rotationEvent = new RotationEvent({
         _id: new mongoose.Types.ObjectId(),
         item,
         startDate,
         endDate,
         people,
+        eventNote,
         participants,
     });
 
@@ -71,8 +73,6 @@ const updateRotationEvent = (
     next: NextFunction
 ) => {
     const rotationEventId = req.params.rotationEventId;
-
-
 
     return RotationEvent.findById(rotationEventId)
         .then((rotationEvent) => {
