@@ -4,6 +4,7 @@ export interface IRotationEvent {
     item: string;
     startDate: Date;
     endDate: Date | null;
+    eventNote: string;
 }
 
 type IParticipant = {
@@ -40,6 +41,10 @@ const RotationEventSchema: Schema = new Schema(
         },
         endDate: {
             type: Date,
+            required: false,
+        },
+        eventNote: {
+            type: String,
             required: false,
         },
         people: [{ type: Schema.Types.ObjectId, ref: 'person' }],
