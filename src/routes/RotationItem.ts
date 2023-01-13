@@ -22,6 +22,6 @@ router.patch(
     // ValidateSchema(Schemas.rotationItem.update),
     controller.updateRotationItem
 );
-// router.delete('/delete/:rotationItemId', controller.deleteRotationItem);
+router.delete('/delete/:rotationItemId', controller.deleteRotationItem);
 
 export default router;
