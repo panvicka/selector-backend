@@ -40,6 +40,7 @@ const createRotationItem = (
         description,
         longDescription,
         isLongerThenOneDay,
+        usualLenght,
         groupes,
     } = req.body;
     const rotationItem = new RotationItem({
@@ -49,6 +50,7 @@ const createRotationItem = (
         longDescription,
         roles,
         isLongerThenOneDay,
+        usualLenght,
         groupes,
     });
     return rotationItem
