@@ -42,6 +42,7 @@ const createRotationItem = (
         isLongerThenOneDay,
         usualLenght,
         groupes,
+        teams,
     } = req.body;
     const rotationItem = new RotationItem({
         _id: new mongoose.Types.ObjectId(),
@@ -52,6 +53,7 @@ const createRotationItem = (
         isLongerThenOneDay,
         usualLenght,
         groupes,
+        teams,
     });
     return rotationItem
         .save()

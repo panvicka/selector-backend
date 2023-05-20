@@ -8,6 +8,7 @@ export interface IRotationItem {
     longDescription: string;
     isLongerThenOneDay: boolean;
     groups: [];
+    teams: [];
 }
 
 export interface IRotationItemModel extends IRotationItem, Document {}
@@ -23,6 +24,7 @@ const RotationItemSchema: Schema = new Schema(
         groupes: [
             { type: Schema.Types.ObjectId, ref: 'group', required: false },
         ],
+        teams: [{ type: Schema.Types.ObjectId, ref: 'team', required: false }],
     },
     {
         versionKey: false,

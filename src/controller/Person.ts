@@ -5,13 +5,14 @@ import RotationEvent from '../models/RotationEvent';
 import { addToArrayIfKeyValueDoesntExist } from '../utils/arrayUtils';
 
 const createPerson = (req: Request, res: Response, next: NextFunction) => {
-    const { name, itemsCanBeAttended, groupes, active } = req.body;
+    const { name, itemsCanBeAttended, groupes, active, teams } = req.body;
     const person = new Person({
         _id: new mongoose.Types.ObjectId(),
         name,
         itemsCanBeAttended,
         groupes,
         active,
+        teams,
     });
 
     return person

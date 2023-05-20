@@ -65,6 +65,7 @@ const startServer = () => {
     router.use('/person', personRoutes);
     router.use('/roles', roleRoutes);
     router.use('/groups', roleGroups);
+    router.use('/teams', roleGroups);
 
     router.get('/ping', (req, res, next) =>
         res.status(200).json({ message: 'pong' })

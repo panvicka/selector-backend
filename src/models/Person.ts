@@ -5,6 +5,7 @@ export interface IPerson {
     active: boolean;
     itemsCanBeAttended: [];
     groupes: [];
+    teams: [];
 }
 
 export interface IPersonModel extends IPerson, Document {}
@@ -17,6 +18,7 @@ const PersonSchema: Schema = new Schema(
             { type: Schema.Types.ObjectId, ref: 'group', required: false },
         ],
         active: { type: Boolean, required: true },
+        teams: [{ type: Schema.Types.ObjectId, ref: 'team', required: false }],
     },
     {
         versionKey: false,
