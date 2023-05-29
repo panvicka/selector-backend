@@ -7,7 +7,9 @@ export interface IRotationItem {
     description: string;
     longDescription: string;
     isLongerThenOneDay: boolean;
+    usualLenght: Number;
     groups: [];
+    hasAutomaticStartDate: boolean;
 }
 
 export interface IRotationItemModel extends IRotationItem, Document {}
@@ -23,6 +25,7 @@ const RotationItemSchema: Schema = new Schema(
         groupes: [
             { type: Schema.Types.ObjectId, ref: 'group', required: false },
         ],
+        hasAutomaticStartDate: { type: Boolean, required: false },
     },
     {
         versionKey: false,
