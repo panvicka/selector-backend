@@ -1,9 +1,12 @@
 import { getRegularDarthVaderAttackTestEvents } from './src/Events/regularDarthVaderAttackTestEvents';
+import { getGalaxyShowAndTellTestEvents } from './src/Events/galaxyShowAndTellTestEvents';
 import { getGroups } from './src/Groups/groups';
 import { mapIds } from './src/helpers';
 import { getItems } from './src/Items/items';
 import { getpeople } from './src/People/people';
 import { getRoles } from './src/Roles/roles';
+import { getStormtroopersShuffleTestEvents } from './src/Events/stormtroopersShuffleTestEvents';
+import { getCloneTrooperTalentShowTestEvents } from './src/Events/cloneTrooperTalentShowTestEvents';
 
 const testRolesWithoutId = getRoles();
 const rolesRes = db.roles.insertMany(testRolesWithoutId);
@@ -27,6 +30,20 @@ const testEvents = [
         testPeopleWithId,
         testItemsWithId
     ),
-    // ...starShipNewTestEvents,
+    ...getGalaxyShowAndTellTestEvents(
+        testRolesWithId,
+        testPeopleWithId,
+        testItemsWithId
+    ),
+    ...getStormtroopersShuffleTestEvents(
+        testRolesWithId,
+        testPeopleWithId,
+        testItemsWithId
+    ),
+    ...getCloneTrooperTalentShowTestEvents(
+        testRolesWithId,
+        testPeopleWithId,
+        testItemsWithId
+    ),
 ];
 const eventsRes = db['rotation-events'].insertMany(testEvents);

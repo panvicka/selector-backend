@@ -4,6 +4,7 @@ export const Roles = {
     Presenter: 2,
     Cleaner: 3,
     Inspector: 4,
+    Participant: 5,
 };
 
 const testRoles = [];
@@ -37,6 +38,12 @@ testRoles[Roles.Inspector] = {
     description: 'Checks the stuff',
     icon: 'faClipboardCheck',
     canHaveMultipleParticipants: false,
+};
+testRoles[Roles.Participant] = {
+    name: 'Participant',
+    description: 'Takes a role',
+    icon: 'faPerson',
+    canHaveMultipleParticipants: true,
 };
 
 export const getRoles = () => {

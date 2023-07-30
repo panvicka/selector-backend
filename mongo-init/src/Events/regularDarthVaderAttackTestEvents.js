@@ -157,7 +157,7 @@ export const getRegularDarthVaderAttackTestEvents = (
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
-                    person: testPeopleWithId[People.Asoka]._id,
+                    person: testPeopleWithId[People.Ahsoka]._id,
                 },
             ],
         },
@@ -172,7 +172,7 @@ export const getRegularDarthVaderAttackTestEvents = (
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
-                    person: testPeopleWithId[People.Asoka]._id,
+                    person: testPeopleWithId[People.Ahsoka]._id,
                 },
             ],
         },
@@ -202,7 +202,7 @@ export const getRegularDarthVaderAttackTestEvents = (
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
-                    person: testPeopleWithId[People.Asoka]._id,
+                    person: testPeopleWithId[People.Ahsoka]._id,
                 },
             ],
         },
@@ -232,7 +232,7 @@ export const getRegularDarthVaderAttackTestEvents = (
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
-                    person: testPeopleWithId[People.Asoka]._id,
+                    person: testPeopleWithId[People.Ahsoka]._id,
                 },
             ],
         },
@@ -262,7 +262,7 @@ export const getRegularDarthVaderAttackTestEvents = (
             participants: [
                 {
                     role: testRolesWithId[Roles.MainAssasin]._id,
-                    person: testPeopleWithId[People.Asoka]._id,
+                    person: testPeopleWithId[People.Ahsoka]._id,
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
@@ -319,7 +319,7 @@ export const getRegularDarthVaderAttackTestEvents = (
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
-                    person: testPeopleWithId[People.Asoka]._id,
+                    person: testPeopleWithId[People.Ahsoka]._id,
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
@@ -365,7 +365,7 @@ export const getRegularDarthVaderAttackTestEvents = (
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
-                    person: testPeopleWithId[People.Asoka]._id,
+                    person: testPeopleWithId[People.Ahsoka]._id,
                 },
             ],
         },
@@ -380,7 +380,7 @@ export const getRegularDarthVaderAttackTestEvents = (
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
-                    person: testPeopleWithId[People.Asoka]._id,
+                    person: testPeopleWithId[People.Ahsoka]._id,
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
@@ -431,7 +431,7 @@ export const getRegularDarthVaderAttackTestEvents = (
             participants: [
                 {
                     role: testRolesWithId[Roles.MainAssasin]._id,
-                    person: testPeopleWithId[People.Asoka]._id,
+                    person: testPeopleWithId[People.Ahsoka]._id,
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
@@ -447,7 +447,7 @@ export const getRegularDarthVaderAttackTestEvents = (
             participants: [
                 {
                     role: testRolesWithId[Roles.MainAssasin]._id,
-                    person: testPeopleWithId[People.Asoka]._id,
+                    person: testPeopleWithId[People.Ahsoka]._id,
                 },
                 {
                     role: testRolesWithId[Roles.SupportAssasin]._id,
