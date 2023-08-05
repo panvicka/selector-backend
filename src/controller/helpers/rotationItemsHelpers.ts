@@ -38,6 +38,10 @@ export const filterByLessThenAverageAttendance = (potentialMatches: any) => {
     );
     console.log('average attendance: ' + averageAttendance);
 
+    if (averageAttendance === 0) {
+        return potentialMatches;
+    }
+
     potentialMatches.forEach((match: any) => {
         if (match.attended < averageAttendance) {
             filteredMatches.push(match);
@@ -60,6 +64,29 @@ export const filterPeoplePlannedInFutureEvents = (
     return filteredMatches;
 };
 
+export const filterOutExcludedPeople = (
+    potentialMatches: any,
+    excludedPeople: any
+) => {
+    let filteredMatches: any = [];
+    potentialMatches.forEach((match: any) => {
+        if (!excludedPeople.includes(match._id)) {
+            filteredMatches.push(match);
+        }
+    });
+    return filteredMatches;
+};
+
+export const filterNonActivePeople = (potentialMatches: any) => {
+    let filteredMatches: any = [];
+    potentialMatches.forEach((match: any) => {
+        if (match.active) {
+            filteredMatches.push(match);
+        }
+    });
+    return filteredMatches;
+};
+
 export const filterPeopleWhoHasNotDoneTheRole = (potentialMatches: any) => {
     let filteredMatches: any = [];
     potentialMatches.forEach((match: any) => {
@@ -69,4 +96,15 @@ export const filterPeopleWhoHasNotDoneTheRole = (potentialMatches: any) => {
     });
 
     return filteredMatches;
+};
+
+export const shuffleArray = (array: any) => {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        const temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    return array;
 };

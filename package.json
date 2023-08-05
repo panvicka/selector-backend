@@ -11,7 +11,8 @@
         "reinstall": "npm run clean && npm install",
         "rebuild": "npm run clean && npm install && npm run build",
         "test": "jest setupFile ./src/setupTests.js",
-        "test:watch": "jest --watch"
+        "test:watch": "jest --watch",
+        "dev-container": "docker-compose -f docker-compose.dev.yml up"
     },
     "keywords": [],
     "author": "",

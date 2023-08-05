@@ -20,7 +20,7 @@ router.get(
     '/get/:rotationItemId/events',
     controller.getRotationItemIdRecentEvents
 );
-router.get('/get/:rotationItemId/randomize/:roleId', controller.randomizePeople);
+router.post('/get/:rotationItemId/randomize/:roleId', controller.randomizePeople);
 
 router.get('/get/', controller.readAllRotationItems);
 router.patch(
