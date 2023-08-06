@@ -276,6 +276,8 @@ const randomizePeople = async (
         return res.status(404).json({ message: 'item not found' });
     }
 
+    console.log(req.body);
+
     let daysSince = req.body?.daysSince;
     let lessThenAverage = req.body?.lessThenAverage;
     let notAlreadyPlanned = req.body?.notAlreadyPlanned;
@@ -318,7 +320,10 @@ const randomizePeople = async (
         }
     }
     if (lessThenAverage === true) {
-        possibleMatches = filterByLessThenAverageAttendance(possibleMatches, averageAttendance);
+        possibleMatches = filterByLessThenAverageAttendance(
+            possibleMatches,
+            averageAttendance
+        );
     }
     if (notAlreadyPlanned === true) {
         possibleMatches = filterPeoplePlannedInFutureEvents(
