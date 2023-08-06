@@ -93,7 +93,7 @@ describe('filterByDate', () => {
 describe('filterByLessThenAverageAttendance', () => {
     it('should return all people that attended less the average', () => {
         const potentialMatches = filterByLessThenAverageAttendance(
-            defaultPotentialMatchesAverage
+            defaultPotentialMatchesAverage, 4
         );
 
         expect(potentialMatches).toEqual(

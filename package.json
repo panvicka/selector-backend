@@ -10,7 +10,7 @@
         "clean": "rm -rf node_modules",
         "reinstall": "npm run clean && npm install",
         "rebuild": "npm run clean && npm install && npm run build",
-        "test": "jest setupFile ./src/setupTests.js",
+        "test": "jest",
         "test:watch": "jest --watch",
         "dev-container-new-data": "rm -rf mongo-init/data/mongo/* && docker-compose -f docker-compose.dev.yml up",
         "dev-container": "docker-compose -f docker-compose.dev.yml up"
