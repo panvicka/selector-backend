@@ -37,15 +37,11 @@ export const getAverageAttendance = (potentialMatches: any) => {
     return averageAttendance;
 };
 
-export const filterByLessThenAverageAttendance = (potentialMatches: any) => {
+export const filterByLessThenAverageAttendance = (
+    potentialMatches: any,
+    averageAttendance: number
+) => {
     let filteredMatches: any = [];
-
-    const averageAttendance = getAverageAttendance(potentialMatches);
-    console.log('average attendance: ' + averageAttendance);
-
-    if (averageAttendance === 0) {
-        return potentialMatches;
-    }
 
     potentialMatches.forEach((match: any) => {
         if (match.attended < averageAttendance) {

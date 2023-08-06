@@ -300,6 +300,7 @@ const randomizePeople = async (
     });
 
     let possibleMatches = attendanceByRole[roleId];
+    const averageAttendance = getAverageAttendance(possibleMatches);
 
     possibleMatches = filterNonActivePeople(possibleMatches);
 
@@ -317,7 +318,7 @@ const randomizePeople = async (
         }
     }
     if (lessThenAverage === true) {
-        possibleMatches = filterByLessThenAverageAttendance(possibleMatches);
+        possibleMatches = filterByLessThenAverageAttendance(possibleMatches, averageAttendance);
     }
     if (notAlreadyPlanned === true) {
         possibleMatches = filterPeoplePlannedInFutureEvents(
@@ -332,8 +333,6 @@ const randomizePeople = async (
     if (numberOfResults) {
         possibleMatches = possibleMatches.slice(0, numberOfResults);
     }
-
-    const averageAttendance = getAverageAttendance(possibleMatches);
 
     res.status(200).json({ possibleMatches, averageAttendance });
 };
