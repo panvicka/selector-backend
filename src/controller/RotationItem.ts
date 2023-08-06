@@ -178,9 +178,13 @@ const getRotationItemIdRecentEvents = async (
         item: { _id: rotationItemId },
     })
         .populate('item')
-        .sort('startDate')
         .populate('participants.role', 'name description icon')
         .populate('participants.person', 'name');
+
+    // sort events by start date
+    events.sort((a: any, b: any) => {
+        return a.startDate - b.startDate;
+    });
 
     if (limit) {
         if (events?.length > 0 && events?.length > parseInt(limit)) {
