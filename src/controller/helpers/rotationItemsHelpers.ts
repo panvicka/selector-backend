@@ -70,7 +70,7 @@ export const filterOutExcludedPeople = (
 ) => {
     let filteredMatches: any = [];
     potentialMatches.forEach((match: any) => {
-        if (!excludedPeople.includes(match._id)) {
+        if (!excludedPeople.includes(match._id.toString())) {
             filteredMatches.push(match);
         }
     });
