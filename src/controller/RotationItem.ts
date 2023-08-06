@@ -3,31 +3,21 @@ import { NextFunction, Request, Response } from 'express';
 import Person from '../models/Person';
 import RotationEvent from '../models/RotationEvent';
 import RotationItem from '../models/RotationItem';
-import { addItemToArrayIfNotAlreadyThere } from '../utils/arrayUtils';
+import {
+    filterByDate,
+    filterByLessThenAverageAttendance,
+    filterNonActivePeople,
+    filterOutExcludedPeople,
+    filterPeoplePlannedInFutureEvents,
+    filterPeopleWhoHasDoneTheRole,
+    filterPeopleWhoHasNotDoneTheRole,
+    getAverageAttendance,
+    shuffleArray,
+} from './helpers/rotationItemsHelpers';
+
 import mongoose from 'mongoose';
 
 let ObjectID = require('mongodb').ObjectID;
-
-// const addItemToAllPeopleWithinGroup = async (itemId, groupId) => {
-//     let possiblePersons = await Person.find({
-//         groupes: { $elemMatch: { $eq: groupId } },
-//     });
-
-//     possiblePersons.forEach((person) => {
-//         let ajdustedItemsToAttend = [...person.itemsCanBeAttended];
-//         ajdustedItemsToAttend = addItemToArrayIfNotAlreadyThere(
-//             ajdustedItemsToAttend,
-//             groupId
-//         );
-//         let newPersonBody = {
-//             ...person,
-//             ajdustedItemsToAttend,
-//         };
-//         if (person) {
-//             person.set(newPersonBody);
-//         }
-//     });
-// };
 
 const createRotationItem = (
     req: Request,
@@ -158,9 +148,6 @@ const getRotationItemIdEvents = (
 ) => {
     const rotationItemId = req.params.rotationItemId;
 
-    console.log(req.query.timeWindow);
-    console.log(req.query.limit);
-
     if (rotationItemId) {
         return RotationEvent.find({
             item: { _id: rotationItemId },
@@ -180,11 +167,8 @@ const getRotationItemIdRecentEvents = async (
     next: NextFunction
 ) => {
     const rotationItemId = req.params.rotationItemId;
-    console.log('getRotationItemIdRecentEvents');
-    console.log(req.query.timeRange);
-    console.log(req.query.limit);
+
     let limit = req.query.limit?.toString();
-    // let events;
 
     if (!mongoose.Types.ObjectId.isValid(rotationItemId)) {
         return res.status(400).send('Invalid item object id');
@@ -203,7 +187,6 @@ const getRotationItemIdRecentEvents = async (
             events = events?.slice(-parseInt(limit));
         }
     }
-    console.log(events);
     res.status(200).json({ events });
 };
 
@@ -212,9 +195,7 @@ const readAllRotationItems = (
     res: Response,
     next: NextFunction
 ) => {
-    console.log(req.query.group);
     if (req.query.group) {
-        console.log('hledam');
         return RotationItem.find({ groupes: req.query.group })
             .then((rotationItems) => res.status(200).json({ rotationItems }))
             .catch((error) => res.status(500).json({ error }));
@@ -276,6 +257,87 @@ const deleteRotationItem = (
         .catch((error) => res.status(500).json({ error }));
 };
 
+const randomizePeople = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+    const rotationItemId = req.params.rotationItemId;
+    const roleId = req.params.roleId;
+
+    if (!mongoose.Types.ObjectId.isValid(rotationItemId)) {
+        return res.status(400).send('Invalid item object id');
+    }
+    const rotationItem = await RotationItem.findById(rotationItemId).populate(
+        'roles'
+    );
+
+    if (!rotationItem) {
+        return res.status(404).json({ message: 'item not found' });
+    }
+
+    let daysSince = req.body?.daysSince;
+    let lessThenAverage = req.body?.lessThenAverage;
+    let notAlreadyPlanned = req.body?.notAlreadyPlanned;
+    let hasDoneTheRole = req.body?.hasDoneTheRole;
+    let numberOfResults = req.body?.numberOfResults;
+    let excludePeople = req.body?.excludePeople;
+
+    let possiblePersons = await Person.find({
+        itemsCanBeAttended: { $elemMatch: { $eq: rotationItemId } },
+    });
+
+    const possibleEvents = await RotationEvent.find({ item: rotationItemId });
+
+    let attendanceByRole: any = {};
+
+    rotationItem.roles.forEach((role: any) => {
+        attendanceByRole[role.id] = getCountForPosition(
+            possibleEvents,
+            possiblePersons,
+            role._id
+        );
+    });
+
+    let possibleMatches = attendanceByRole[roleId];
+
+    possibleMatches = filterNonActivePeople(possibleMatches);
+
+    if (excludePeople) {
+        possibleMatches = filterOutExcludedPeople(
+            possibleMatches,
+            excludePeople
+        );
+    }
+    if (hasDoneTheRole !== undefined) {
+        if (hasDoneTheRole === true) {
+            possibleMatches = filterPeopleWhoHasNotDoneTheRole(possibleMatches);
+        } else {
+            possibleMatches = filterPeopleWhoHasDoneTheRole(possibleMatches);
+        }
+    }
+    if (lessThenAverage === true) {
+        possibleMatches = filterByLessThenAverageAttendance(possibleMatches);
+    }
+    if (notAlreadyPlanned === true) {
+        possibleMatches = filterPeoplePlannedInFutureEvents(
+            possibleMatches,
+            new Date()
+        );
+    }
+    possibleMatches = filterByDate(possibleMatches, daysSince, new Date());
+
+    possibleMatches = shuffleArray(possibleMatches);
+
+    if (numberOfResults) {
+        possibleMatches = possibleMatches.slice(0, numberOfResults);
+    }
+
+    const averageAttendance = getAverageAttendance(possibleMatches);
+
+    res.status(200).json({ possibleMatches, averageAttendance });
+};
+
 export default {
     createRotationItem,
     readRotationItem,
@@ -285,4 +347,5 @@ export default {
     getRotationItemIdPeopleCount,
     getRotationItemIdRecentEvents,
     getRotationItemIdEvents,
+    randomizePeople,
 };
