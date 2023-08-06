@@ -9,7 +9,9 @@ import {
     filterNonActivePeople,
     filterOutExcludedPeople,
     filterPeoplePlannedInFutureEvents,
+    filterPeopleWhoHasDoneTheRole,
     filterPeopleWhoHasNotDoneTheRole,
+    getAverageAttendance,
     shuffleArray,
 } from './helpers/rotationItemsHelpers';
 
@@ -274,20 +276,12 @@ const randomizePeople = async (
         return res.status(404).json({ message: 'item not found' });
     }
 
-    console.log(req.body);
     let daysSince = req.body?.daysSince;
     let lessThenAverage = req.body?.lessThenAverage;
     let notAlreadyPlanned = req.body?.notAlreadyPlanned;
     let hasDoneTheRole = req.body?.hasDoneTheRole;
     let numberOfResults = req.body?.numberOfResults;
     let excludePeople = req.body?.excludePeople;
-
-    console.log('daysSince', daysSince);
-    console.log('lessThenAverage', lessThenAverage);
-    console.log('notAlreadyPlanned', notAlreadyPlanned);
-    console.log('hasDoneTheRole', hasDoneTheRole);
-    console.log('numberOfResults', numberOfResults);
-    console.log('excludePeople', excludePeople);
 
     let possiblePersons = await Person.find({
         itemsCanBeAttended: { $elemMatch: { $eq: rotationItemId } },
@@ -315,9 +309,12 @@ const randomizePeople = async (
             excludePeople
         );
     }
-
-    if (hasDoneTheRole === true) {
-        possibleMatches = filterPeopleWhoHasNotDoneTheRole(possibleMatches);
+    if (hasDoneTheRole !== undefined) {
+        if (hasDoneTheRole === true) {
+            possibleMatches = filterPeopleWhoHasNotDoneTheRole(possibleMatches);
+        } else {
+            possibleMatches = filterPeopleWhoHasDoneTheRole(possibleMatches);
+        }
     }
     if (lessThenAverage === true) {
         possibleMatches = filterByLessThenAverageAttendance(possibleMatches);
@@ -336,7 +333,9 @@ const randomizePeople = async (
         possibleMatches = possibleMatches.slice(0, numberOfResults);
     }
 
-    res.status(200).json({ possibleMatches });
+    const averageAttendance = getAverageAttendance(possibleMatches);
+
+    res.status(200).json({ possibleMatches, averageAttendance });
 };
 
 export default {

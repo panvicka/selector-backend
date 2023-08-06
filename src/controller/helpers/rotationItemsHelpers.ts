@@ -27,15 +27,20 @@ export const filterByDate = (
     }
 };
 
-export const filterByLessThenAverageAttendance = (potentialMatches: any) => {
-    let filteredMatches: any = [];
-
+export const getAverageAttendance = (potentialMatches: any) => {
     const averageAttendance = Math.ceil(
         potentialMatches.reduce(
             (acc: any, curr: any) => acc + curr.attended,
             0
         ) / potentialMatches.length
     );
+    return averageAttendance;
+};
+
+export const filterByLessThenAverageAttendance = (potentialMatches: any) => {
+    let filteredMatches: any = [];
+
+    const averageAttendance = getAverageAttendance(potentialMatches);
     console.log('average attendance: ' + averageAttendance);
 
     if (averageAttendance === 0) {
@@ -91,6 +96,17 @@ export const filterPeopleWhoHasNotDoneTheRole = (potentialMatches: any) => {
     let filteredMatches: any = [];
     potentialMatches.forEach((match: any) => {
         if (match.attended !== 0) {
+            filteredMatches.push(match);
+        }
+    });
+
+    return filteredMatches;
+};
+
+export const filterPeopleWhoHasDoneTheRole = (potentialMatches: any) => {
+    let filteredMatches: any = [];
+    potentialMatches.forEach((match: any) => {
+        if (match.attended === 0) {
             filteredMatches.push(match);
         }
     });
